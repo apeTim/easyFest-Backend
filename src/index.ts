@@ -5,4 +5,5 @@ import startApi from './utils/start-api';
 const app: Express = express();
 const srv: HTTPServer = new HTTPServer(app);
 
+// Start API and add middlewares to app
 startApi({ app, srv });
