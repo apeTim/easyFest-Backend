@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 import { Server as HTTPServer } from 'http';
 import { DEBUG, PORT, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, SESSION_SECRET } from '../config/config';
 import { User } from "../database";
@@ -44,6 +44,9 @@ export default async ({ app, srv }: Options) => {
 
         app.use(cookieParser());
         app.use(sessions(SESSION_OPTIONS));
+        app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+            return res.status(error.code).json(error);
+        });
 
         srv.listen(PORT, () => console.log(`API-Server listeing ${PORT} port.`));
     } catch (e) {
