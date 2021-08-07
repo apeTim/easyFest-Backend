@@ -5,7 +5,8 @@ import mongoose from "../mongoose";
 
 const UserSchema = new mongoose.Schema <Document & IUser>({
     email: { type: String, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    activated: { type: Boolean, required: false, default: false }
 }, {
     timestamps: true
 });
