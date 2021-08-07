@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import sessions, { SessionOptions } from 'express-session';
 import redis from 'redis';
 import RedisStore from 'connect-redis';
+import Routes from '../routes';
 
 interface Options {
     app: Express,
@@ -44,6 +45,7 @@ export default async ({ app, srv }: Options) => {
 
         app.use(cookieParser());
         app.use(sessions(SESSION_OPTIONS));
+        app.use(Routes);
         app.use((error: any, req: Request, res: Response, next: NextFunction) => {
             return res.status(error.code).json(error);
         });

@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import { DOMAIN } from '../config/config';
 import { User } from '../database';
 import genError from '../utils/genError';
+import mailer from '../utils/mailer';
 
 // Авторизация
 export const signin = async function (req: Request, res: Response, next: NextFunction) {
@@ -65,6 +67,9 @@ export const signup = async function (req: Request, res: Response, next: NextFun
         req.session.user = {
             id: user.id
         }
+
+        // Отослать письмо на E-Mail для завершения регистрации
+        await mailer.sendActivateMessage(email, `${DOMAIN}/activate?uid=${user.id}`);
 
         return res.json({
             message: "Пользователь успешно зарегистрован",
