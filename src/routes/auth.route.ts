@@ -1,5 +1,4 @@
 import { Router, Request, Response } from "express";
-import { body } from "express-validator";
 import * as AuthContoller from '../contollers/auth.contoller';
 import * as AuthValidator from '../validators/auth.validator';
 

@@ -26,6 +26,15 @@ export const signin = async function (req: Request, res: Response, next: NextFun
             }], 404));
         }
 
+        if(!user.isValidPass(password)){
+            return next(genError(`Неверный пароль`, [{
+                location: 'body',
+                param: 'password',
+                value: password,
+                msg: 'Неверный'
+            }], 400));
+        }
+
         // Заносим данные пользователя в сессии
         req.session.user = {
             id: user.id
