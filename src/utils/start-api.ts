@@ -33,9 +33,10 @@ const SESSION_OPTIONS: SessionOptions = {
     rolling: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
+        secure: false,
         httpOnly: true,
-        sameSite: 'none'
+        sameSite: 'none',
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
 
