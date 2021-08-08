@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { DOMAIN } from '../config/config';
+import { DEBUG, DOMAIN } from '../config/config';
 import { User } from '../database';
 import genError from '../utils/genError';
 import mailer from '../utils/mailer';
@@ -52,10 +52,14 @@ export const signin = async function (req: Request, res: Response, next: NextFun
 // Регистрация
 export const signup = async function (req: Request, res: Response, next: NextFunction) {
     try {
+        DEBUG && console.log('Auth/Signup:' + JSON.stringify(req.body));
+
         // Парсим ошибки
         const errors = validationResult(req);
         // Если ошибки есть
         if (!errors.isEmpty()) { return next(genError(`Недостаточно данных`, errors.array(), 400)); }
+
+        DEBUG && console.log('Auth/Signup:' + JSON.stringify(req.body));
 
         // Деструктуризируем body из req
         const { email, password } = req.body;

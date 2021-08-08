@@ -16,6 +16,7 @@
   "author": "Zharckov (https://vk.com/id171745503)",
   "license": "ISC",
   "dependencies": {
+    "@types/helmet": "^4.0.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "connect-redis": "^6.0.0",
@@ -24,6 +25,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "express-validator": "^6.12.1",
+    "helmet": "^4.6.0",
     "mongoose": "^5.13.5",
     "nodemailer": "^6.6.3",
     "redis": "^3.1.2",

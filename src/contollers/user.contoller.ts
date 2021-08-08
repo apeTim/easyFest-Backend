@@ -15,8 +15,10 @@ export const activate = async (req: Request, res: Response, next: NextFunction) 
         user.activated = true;
         await user.save();
         
-        req.session.user.activated = true;
-
+        req.session.user = {
+            id: user.id,
+            activate: user.activated
+        }
         return res.redirect('/');
     } catch(e){
         return next(genError(e.message, [{...e}], 500));

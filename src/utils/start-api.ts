@@ -3,8 +3,10 @@ import { Server as HTTPServer } from 'http';
 import { DEBUG, PORT, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, SESSION_SECRET } from '../config/config';
 import { User } from "../database";
 import cookieParser from 'cookie-parser';
-import sessions, { SessionOptions } from 'express-session';
+import sessions, { SessionOptions, MemoryStore } from 'express-session';
+import bodyParser from 'body-parser';
 import redis from 'redis';
+import helmet from 'helmet';
 import RedisStore from 'connect-redis';
 import Routes from '../routes';
 
@@ -20,11 +22,12 @@ const redisClient = redis.createClient({
 });
 
 redisClient.on('connect', () => console.log(`Successful connect to redis-store!`));
+redisClient.on('error', (e) => console.error(`Can't connect to redis-store: ${e}`));
 
 const STORE = RedisStore(sessions);
 
 const SESSION_OPTIONS: SessionOptions = {  
-    store: new STORE({ client: redisClient }),
+    store: DEBUG ? new MemoryStore() : new STORE({ client: redisClient }),
     secret: SESSION_SECRET,
     resave: false,
     rolling: false,
@@ -43,11 +46,17 @@ export default async ({ app, srv }: Options) => {
             await User.deleteMany();   
         }
 
+        app.use(helmet());
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.json({ strict: true }));
         app.use(cookieParser());
         app.use(sessions(SESSION_OPTIONS));
         app.use(Routes);
         app.use((error: any, req: Request, res: Response, next: NextFunction) => {
             return res.status(error.code).json(error);
+        });
+        app.use((req, res) => {
+            return res.status(404).json({ message: 'Route not found' });
         });
 
         srv.listen(PORT, () => console.log(`API-Server listeing ${PORT} port.`));

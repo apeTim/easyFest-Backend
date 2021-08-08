@@ -1,12 +1,12 @@
-import { check } from 'express-validator';
+import { check, body } from 'express-validator';
 
 export const signin = [
-    check('email', 'E-Mail должен быть заполнен').isEmail(),
-    check('password', 'Пароль должен состоять из 8 и более символов!')
+    body('email', 'E-Mail должен быть заполнен').isEmail(),
+    body('password', 'Пароль должен состоять из 8 и более символов!').isLength({ min: 8 })
 ];
 
 export const signup = [
-    check('email', 'E-Mail должен быть заполнен').isEmail(),
-    check('password', 'Пароль должен состоять из 8 и более символов!').notEmpty().isLength({ min: 8 })
+    body('email', 'E-Mail должен быть заполнен').notEmpty().isEmail(),
+    body('password', 'Пароль должен состоять из 8 и более символов!').isLength({ min: 8 })
 ];
 
