@@ -44,7 +44,7 @@ export default async ({ app, srv }: Options) => {
     try {
         // if DEBUG - on, then clear all database
         if(DEBUG){
-            await User.deleteMany();   
+            // await User.deleteMany();   
         }
 
         app.use(helmet());
