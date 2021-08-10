@@ -14,3 +14,11 @@ export const update = [
     body("facebook", "Укажите ссылку на Facebook"),
     body("intagram", "Укажите ссылку на Intagram")
 ]
+
+export const change = {
+    password: [
+        body("new_password", "Укажите новый пароль").isString(),
+        body("new_password_confirm", "Подтвердите пароль").isString(),
+        body("old_password", "Укажите старый пароль").isString()
+    ]
+}

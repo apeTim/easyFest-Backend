@@ -55,3 +55,33 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
         return next(genError(e.message, [{...e}], 500));
     }
 }
+
+export const change = {
+    password: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            let { new_password, new_password_confirm, old_password } = req.body;
+            let user = await User.findById(req.session.user.id);
+            if(!user){ return next(genError('Пользователь не найден!', [], 404)); }
+
+            if(!user.isValidPass(old_password)){ return next(genError('Неверный пароль', [], 400)); }
+            if(new_password != new_password_confirm){ return next(genError('Пароли не совпадают', [], 400)); }
+            
+            user.password = new_password;
+            await user.save();
+            
+            return res.json({
+                message: 'Пароль изменён!',
+                info: "ЧТобы получить обновлённого пользователя - GET /auth/user"
+            });
+        } catch(e){
+            return next(genError(e.message, [{...e}], 500)); 
+        }
+    },
+    email: (req: Request, res: Response, next: NextFunction) => {
+        try {
+
+        } catch(e){
+            return next(genError(e.message, [{...e}], 500)); 
+        }
+    }
+}
