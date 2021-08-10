@@ -29,3 +29,29 @@ export const activate = async (req: Request, res: Response, next: NextFunction) 
         return next(genError(e.message, [{...e}], 500));
     }
 }
+
+export const update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let { first_name, last_name, birthday, sex } = req.body;
+        let user = await User.findById(req.session.user.id);
+        if(!user){ return next(genError(`Пользователь не найден!`, [], 400)); }
+        user.first_name = first_name ? String(first_name) : ''; 
+        user.last_name  = last_name ? String(last_name) : ''; 
+        user.birthday   = birthday ? new Date(birthday).getTime() : 0; 
+        user.sex        = sex ? sex : -1; 
+        
+        user.phone      = req.body.phone;
+        user.vkontakte  = req.body.vkontakte;
+        user.facebook   = req.body.facebook;
+        user.intagram   = req.body.intagram;
+
+        await user.save();
+
+        return res.json({ 
+            message: 'Данные пользователя - обновленны!',
+            info: 'Получить обновленные данные GET /auth/user'
+        });
+    } catch(e){
+        return next(genError(e.message, [{...e}], 500));
+    }
+}

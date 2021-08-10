@@ -22,12 +22,19 @@ const redisClient = redis.createClient({
 });
 
 redisClient.on('connect', () => console.log(`Successful connect to redis-store!`));
-redisClient.on('error', (e) => console.error(`Can't connect to redis-store: ${e}`));
+redisClient.on('error', (e) => {
+    if(DEBUG){
+        console.error(`Can't connect to Redis-Store. Reason: ${e.message}`);
+        redisClient.quit();
+        return;
+    }
+    throw e;
+});
 
 const STORE = RedisStore(sessions);
 
 const SESSION_OPTIONS: SessionOptions = {  
-    store: DEBUG ? new MemoryStore() : new STORE({ client: redisClient }),
+    store: new STORE({ client: redisClient }),
     secret: SESSION_SECRET,
     resave: false,
     rolling: false,
@@ -54,7 +61,7 @@ export default async ({ app, srv }: Options) => {
         app.use(sessions(SESSION_OPTIONS));
         app.use(Routes);
         app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-            return res.status(error.code).json(error);
+            return res.status(error.code || 500).json(error);
         });
         app.use((req, res) => {
             return res.status(404).json({ message: 'Route not found' });
