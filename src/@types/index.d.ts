@@ -4,4 +4,9 @@ declare global {
             user: any
         }
     }
+    declare module 'socket.io'{
+        export interface Socket {
+            userId: string
+        }
+    }
 }
