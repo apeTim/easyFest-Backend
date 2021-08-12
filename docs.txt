@@ -1,0 +1,39 @@
+POST /auth/signup:
+    body: 
+        email
+        password
+POST /auth/signin:
+    body: 
+        email
+        password
+
+GET /auth/user - Получить данные пользователя
+GET /auth/logout - Удалить сессию
+
+POST user/update:
+    body: 
+        first_name - Имя (строка)
+        last_name - Фамилия (строка)
+        birthday - Дата рождения (new Date().getTime())
+        sex - Пол (0 или 1 или -1)
+        phone - [INFO_OBJECT] (Смотреть ниже)
+        vkontakte - [INFO_OBJECT] (Смотреть ниже)
+        facebook - [INFO_OBJECT] (Смотреть ниже)
+        intagram - [INFO_OBJECT] (Смотреть ниже)
+
+POST user/change/password:
+    body: 
+        new_password - Новый пароль (строка)
+        new_password_confirm - Новый пароль_Подтверждение (строка, должен совпадать с new_password)
+        old_password - Старый пароль
+        
+
+
+===========================
+INFO_OBJECT:
+    data - Строка
+    show - Boolean - показывать или нет данные 
+===========================
+
+
+После роутов обновления - делать запрос на /auth/user, чтобы получить обновленные данные пользователя
